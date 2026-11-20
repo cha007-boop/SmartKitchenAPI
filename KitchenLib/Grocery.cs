@@ -6,7 +6,7 @@
         private int _id;
         private int? _barcode;
 		private string _name;
-		private Ingredient? _ingredientType;
+		private string? _ingredientType;
 		private string? _category;
         #endregion
 
