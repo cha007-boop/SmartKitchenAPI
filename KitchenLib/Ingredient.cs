@@ -6,12 +6,15 @@ namespace KitchenLib
 {
     public class Ingredient
     {
-		private int _id;
+        #region Instance fields
+        private int _id;
 		private string _name;
 		private string _description;
         private string? _thumbnailUrl;
         private string? _type;
+        #endregion
 
+        #region Properties
         public int Id
 		{
 			get { return _id; }
@@ -37,7 +40,9 @@ namespace KitchenLib
             get { return _type; }
             set { _type = value; }
         }
+        #endregion
 
+        #region Constructors
         public Ingredient()
         {
             _id = 0;
@@ -54,6 +59,7 @@ namespace KitchenLib
             _thumbnailUrl = thumbnaiUrl;
             _type = type;
         }
+        #endregion
 
     }
 }
