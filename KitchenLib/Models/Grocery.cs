@@ -1,4 +1,4 @@
-﻿namespace KitchenLib
+﻿namespace KitchenLib.Models
 {
     public class Grocery
     {
@@ -8,6 +8,7 @@
 		private string _name;
 		private string? _ingredientType;
 		private string? _category;
+        private int _quantity;
         #endregion
 
         #region Properties
@@ -26,7 +27,12 @@
             get { return _name; }
             set { _name = value; }
         }
-        public Ingredient? IngredientType
+        public int Quantity
+        {
+            get { return _quantity; }
+            set { _quantity = value; }
+        }
+        public string? IngredientType
         {
             get { return _ingredientType; }
             set { _ingredientType = value; }

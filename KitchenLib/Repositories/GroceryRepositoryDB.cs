@@ -1,26 +1,18 @@
-﻿using System;
+﻿using KitchenLib.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KitchenLib
+namespace KitchenLib.Repositories
 {
     public class GroceryRepositoryDB : IGroceryRepository
     {
-        private readonly string _productionDBconnectionString = "";
-        private readonly string _testDBconnectionString = "";
 
         private string _connectionString;
 
-        public GroceryRepositoryDB(bool test = false)
+        public GroceryRepositoryDB(string connectionString)
         {
-            if (test)
-            {
-                _connectionString = _testDBconnectionString;
-            }
-            else
-            {
-                _connectionString = _productionDBconnectionString;
-            }
+            _connectionString = connectionString;
         }
 
         public Grocery Add(Grocery grocery)

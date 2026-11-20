@@ -1,8 +1,9 @@
-﻿using System;
+﻿using KitchenLib.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KitchenLib
+namespace KitchenLib.Repositories
 {
     public interface IGroceryRepository
     {
