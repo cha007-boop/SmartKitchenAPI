@@ -4,7 +4,7 @@
     {
         #region Instance fields
         private int _id;
-        private int? _barcode;
+        private string? _barcode;
 		private string _name;
 		private string? _ingredientType;
 		private string? _category;
@@ -16,7 +16,7 @@
             get { return _id; }
             set { _id = value; }
         }
-        public int? Barcode
+        public string? Barcode
 		{
 			get { return _barcode; }
 			set { _barcode = value; }
@@ -42,12 +42,12 @@
         public Grocery()
         {
             _id = 0;
-            _barcode = null;
+            _barcode = "";
             _name = "";
             _ingredientType = null;
             _category = null;
         }
-        public Grocery(int id, int? barcode, string name, Ingredient? ingredientType, string? category)
+        public Grocery(int id, string? barcode, string name, string? ingredientType, string? category)
         {
             _id = id;
             _barcode = barcode;
