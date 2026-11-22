@@ -1,4 +1,5 @@
-﻿using KitchenLib.Repositories;
+﻿using KitchenLib.Interfaces;
+using KitchenLib.Repositories;
 using Microsoft.Data.SqlClient;
 
 namespace KitchenLibTests

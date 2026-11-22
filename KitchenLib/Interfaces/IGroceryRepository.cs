@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KitchenLib.Repositories
+namespace KitchenLib.Interfaces
 {
     public interface IGroceryRepository
     {
