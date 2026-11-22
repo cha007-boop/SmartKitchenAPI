@@ -32,7 +32,7 @@ namespace KitchenLib.Services
             throw new NotImplementedException();
         }
 
-        public Task ProcessScanAsync(ScanRequest request)
+        public Task ProcessScanAsync(string barcode, ScanMode mode)
         {
             throw new NotImplementedException();
         }
