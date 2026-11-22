@@ -7,7 +7,7 @@
         public string? Barcode { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
-        public int? IngredientTypeId { get; set; }
+        public string? IngredientStr { get; set; }
         public string? Category { get; set; }
         #endregion
 
@@ -17,7 +17,7 @@
             Id = 0;
             Barcode = "";
             Name = "";
-            IngredientTypeId = null;
+            IngredientStr = null;
             Category = null;
         }
         public Grocery(int id, string? barcode, string name, int? ingredientTypeId, string? category)
@@ -25,7 +25,7 @@
             Id = id;
             Barcode = barcode;
             Name = name;
-            IngredientTypeId = ingredientTypeId;
+            IngredientStr = ingredientTypeId;
             Category = category;
         }
         #endregion
