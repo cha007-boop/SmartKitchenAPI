@@ -12,7 +12,7 @@ namespace KitchenLib.Models
         public string? Description { get; set; }
         public string? ThumbnailUrl { get; set; }
         public List<string> IngredientStrings { get; set; }
-        public List<string> Measure { get; set; }
+        public List<string> Measures { get; set; }
         public string? Instructions { get; set; }
         public string? YoutubeUrl { get; set; }
         public string? Tags { get; set; }
@@ -26,7 +26,7 @@ namespace KitchenLib.Models
             Description = "";
             ThumbnailUrl = null;
             IngredientStrings = new List<string>();
-            Measure = new List<string>();
+            Measures = new List<string>();
             Instructions = null;
             YoutubeUrl = null;
             Tags = null;
@@ -38,7 +38,7 @@ namespace KitchenLib.Models
             Description = description;
             ThumbnailUrl = thumbnailUrl;
             IngredientStrings = ingredientStrings;
-            Measure = measure;
+            Measures = measure;
             Instructions = instructions;
             YoutubeUrl = youtubeUrl;
             Tags = tags;
