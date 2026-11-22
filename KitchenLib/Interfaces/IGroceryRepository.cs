@@ -7,10 +7,10 @@ namespace KitchenLib.Interfaces
 {
     public interface IGroceryRepository
     {
-        Grocery Add(Grocery grocery);
-        Grocery? GetById(int id);
-        Grocery? GetByBarcode(string barcode);
-        List<Grocery> GetAll(int? id = null, string? barcode = null, string? name = null, string? ingredientType = null, string? category = null);
+        Task<Grocery> AddAsync(Grocery grocery);
+        Task<Grocery?> GetByIdAsync(int id);
+        Task<Grocery?> GetByBarcodeAsync(string barcode);
+        Task<IEnumerable<Grocery>> GetAllAsync(int? id = null, string? barcode = null, string? name = null, string? ingredientType = null, string? category = null);
         Grocery? Update(int id, Grocery grocery);
         Grocery? Delete(int id);
 
