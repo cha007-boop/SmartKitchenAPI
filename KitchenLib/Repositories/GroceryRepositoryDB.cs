@@ -21,7 +21,7 @@ namespace KitchenLib.Repositories
             throw new NotImplementedException();
         }
 
-        public List<Grocery> GetAll(int? id = null, string? barcode = null, string? name = null, string? ingredientType = null, string? category = null)
+        public List<Grocery> GetAll(int? id = null, string? barcode = null, string? name = null, string? ingredientType = null, string? category = null, int? minQuantity = null, int? maxQuantity = null)
         {
             throw new NotImplementedException();
         }
