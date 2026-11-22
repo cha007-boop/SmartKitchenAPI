@@ -6,11 +6,11 @@ using System.Text;
 
 namespace KitchenLib.Repositories
 {
-    public class GroceryRepositoryDB : IGroceryRepository
+    public class GroceryRepository : IGroceryRepository
     {
         private string _connectionString;
 
-        public GroceryRepositoryDB(string connectionString)
+        public GroceryRepository(string connectionString)
         {
             _connectionString = connectionString;
         }

@@ -13,7 +13,7 @@ namespace KitchenLibTests.IntegrationTests
         {
             string connectionString = "testDbConnectionString";
 
-            _groceryRepository = new GroceryRepositoryDB(connectionString);
+            _groceryRepository = new GroceryRepository(connectionString);
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
