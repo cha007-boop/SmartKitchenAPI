@@ -1,4 +1,5 @@
 ﻿using KitchenLib.Interfaces;
+using KitchenLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,32 @@ namespace KitchenLib.Services
     public class GroceryService : IGroceryService
     {
         private readonly IGroceryRepository _groceryRepository;
-        public GroceryService(IGroceryRepository groceryRepository)
+        private readonly IProductInfoProvider _productInfoProvider;
+        private readonly IIngredientClassifier _ingredientClassifier;
+
+        public GroceryService(
+            IGroceryRepository groceryRepository,
+            IProductInfoProvider productInfoProvider,
+            IIngredientClassifier ingredientClassifier)
         {
             _groceryRepository = groceryRepository;
+            _productInfoProvider = productInfoProvider;
+            _ingredientClassifier = ingredientClassifier;
+        }
+
+        public Task<IEnumerable<Grocery>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Grocery?> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ProcessScanAsync(ScanRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }
