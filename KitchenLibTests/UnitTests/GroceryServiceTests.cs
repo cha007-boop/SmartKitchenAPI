@@ -32,21 +32,21 @@ namespace KitchenLibTests.UnitTests
         public async Task ProcessScanAsync_IncreasesQuantity_ExistingGroceryAddMode()
         {
             // Arrange
-            string barcode = "123456789";
+            int id = 1;
 
-            Grocery grocery = await _groceryService.GetByBarcodeAsync(barcode);
+            Grocery grocery = await _groceryService.GetByIdAsync(id);
             int countBeforeScan = grocery.Quantity;
 
             // Act
             ScanRequest request = new ScanRequest
             {
-                Barcode = barcode,
+                Barcode = grocery.Barcode,
                 Mode = ScanMode.Add
             };
             await _groceryService.ProcessScanAsync(request);
 
             // Assert
-            Grocery updatedGrocery = await _groceryService.GetByBarcodeAsync(barcode);
+            Grocery updatedGrocery = await _groceryService.GetByIdAsync(id);
             int countAfterScan = updatedGrocery.Quantity;
             Assert.AreEqual(countBeforeScan + 1, countAfterScan);
         }

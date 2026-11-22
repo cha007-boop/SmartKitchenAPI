@@ -8,7 +8,7 @@ namespace KitchenLib.Interfaces
     public interface IGroceryService
     {
         Task ProcessScanAsync(ScanRequest request);
-        Task<Grocery?> GetByBarcodeAsync(string barcode);
+        Task<Grocery?> GetByIdAsync(int id);
         Task<IEnumerable<Grocery>> GetAllAsync();
     }
 }

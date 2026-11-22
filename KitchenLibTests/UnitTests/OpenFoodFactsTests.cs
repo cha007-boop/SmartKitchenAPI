@@ -10,15 +10,14 @@ using System.Text;
 namespace KitchenLibTests.UnitTests
 {
     [TestClass]
-    public sealed class ProductInfoTests
+    public sealed class OpenFoodFactsTests
     {
-        private IProductInfoProvider _productInfoProvider;
-        [TestInitialize]
-        public void TestInitialize()
-        {
+        //[TestInitialize]
+        //public void TestInitialize()
+        //{
 
 
-        }
+        //}
 
         [TestMethod]
         public async Task GetByBarcodeAsync_ReturnsProduct_WhenProductExists()
@@ -50,13 +49,17 @@ namespace KitchenLibTests.UnitTests
 
             var openFoodFactsService = new OpenFoodFactsService(httpClient);
 
+            var barcode = "123456789";
+
             // Act
-            ProductInfo? result = await openFoodFactsService.GetByBarcodeAsync("123456789");
+            ProductInfo? result = await openFoodFactsService.GetByBarcodeAsync(barcode);
 
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Whole Milk", result.Name);
             Assert.AreEqual("Example Brand", result.Brand);
+            Assert.AreEqual("Dairy products", result.Categories);
+            Assert.AreEqual(barcode, result.Barcode);
         }
 
     }

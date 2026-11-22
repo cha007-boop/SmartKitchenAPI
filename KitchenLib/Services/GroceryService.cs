@@ -26,9 +26,9 @@ namespace KitchenLib.Services
         {
             throw new NotImplementedException();
         }
-        public Task<Grocery?> GetByBarcodeAsync(string barcode)
+        public Task<Grocery?> GetByIdAsync(int id)
         {
-            return _groceryRepository.GetByBarcodeAsync(barcode);
+            return _groceryRepository.GetByIdAsync(id);
         }
         public Task<IEnumerable<Grocery>> GetAllAsync()
         {
