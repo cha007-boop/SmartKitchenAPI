@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using KitchenLib.Models;
 
-namespace KitchenLib.Models
+namespace SmartKitchenAPI.Models
 {
     public class ScanRequest
     {
