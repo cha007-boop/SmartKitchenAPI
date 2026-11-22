@@ -26,15 +26,5 @@ namespace KitchenLib.Services
         {
             throw new NotImplementedException();
         }
-
-        public Task<Grocery?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ProcessScanAsync(string barcode, ScanMode mode)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
