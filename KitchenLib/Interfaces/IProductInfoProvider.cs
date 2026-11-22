@@ -7,6 +7,6 @@ namespace KitchenLib.Interfaces
 {
     public interface IProductInfoProvider
     {
-        Task<ProductInfo> GetByBarcodeAsync(string barcode);
+        Task<ProductInfo?> GetByBarcodeAsync(string barcode);
     }
 }

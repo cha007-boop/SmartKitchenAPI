@@ -14,8 +14,8 @@ namespace KitchenLib.Interfaces
 
         // Maybe just do filtering and sorting in front-end?
         //Task<IEnumerable<Grocery>> GetAllAsync(int? id = null, string? barcode = null, string? name = null, string? ingredient = null, string? category = null, int? minQuantity = null, int? maxQuantity = null);
-        Task<Grocery?> Update(int id, Grocery grocery);
-        Task<Grocery?> Delete(int id);
+        Task<Grocery?> UpdateAsync(int id, Grocery grocery);
+        Task<Grocery?> DeleteAsync(int id);
 
     }
 }

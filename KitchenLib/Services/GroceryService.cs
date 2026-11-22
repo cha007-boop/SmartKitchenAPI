@@ -22,9 +22,17 @@ namespace KitchenLib.Services
             _ingredientClassifier = ingredientClassifier;
         }
 
-        public Task ProcessScanAsync(string barcode, ScanMode mode)
+        public Task ProcessScanAsync(ScanRequest request)
         {
             throw new NotImplementedException();
+        }
+        public Task<Grocery?> GetByBarcodeAsync(string barcode)
+        {
+            return _groceryRepository.GetByBarcodeAsync(barcode);
+        }
+        public Task<IEnumerable<Grocery>> GetAllAsync()
+        {
+            return _groceryRepository.GetAllAsync();
         }
     }
 }

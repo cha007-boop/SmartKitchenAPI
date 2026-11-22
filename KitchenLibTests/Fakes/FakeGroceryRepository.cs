@@ -9,8 +9,12 @@ namespace KitchenLibTests.Fakes
 
     public class FakeGroceryRepository : IGroceryRepository
     {
-        private readonly List<Grocery> _groceries = new();
+        private readonly List<Grocery> _groceries = new List<Grocery>();
         private int _nextId = 1;
+        public FakeGroceryRepository()
+        {
+            _groceries.Add(new Grocery { Id = _nextId++, Name = "Whole Milk 1l", Barcode = "123456789", Quantity = 1, Ingredient = "Milk" });
+        }
 
         public Task<Grocery> AddAsync(Grocery grocery)
         {

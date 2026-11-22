@@ -7,6 +7,6 @@ namespace KitchenLib.Interfaces
 {
     public interface IIngredientClassifier
     {
-        Task<Ingredient?> ClassifyAsync(ProductInfo productInfo);
+        Task<IEnumerable<Ingredient>> ClassifyAsync(ProductInfo productInfo);
     }
 }

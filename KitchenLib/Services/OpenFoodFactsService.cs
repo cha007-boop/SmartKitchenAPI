@@ -8,7 +8,14 @@ namespace KitchenLib.Services
 {
     public class OpenFoodFactsService : IProductInfoProvider
     {
-        public Task<ProductInfo> GetByBarcodeAsync(string barcode)
+        private readonly HttpClient _httpClient;
+
+        public OpenFoodFactsService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public Task<ProductInfo?> GetByBarcodeAsync(string barcode)
         {
             throw new NotImplementedException();
         }
