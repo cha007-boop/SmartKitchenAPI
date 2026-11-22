@@ -2,64 +2,31 @@
 {
     public class Grocery
     {
-        #region Instance fields
-        private int _id;
-        private string? _barcode;
-		private string _name;
-		private string? _ingredientType;
-		private string? _category;
-        private int _quantity;
-        #endregion
-
         #region Properties
-        public int Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
-        public string? Barcode
-		{
-			get { return _barcode; }
-			set { _barcode = value; }
-		}
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-        public int Quantity
-        {
-            get { return _quantity; }
-            set { _quantity = value; }
-        }
-        public string? IngredientType
-        {
-            get { return _ingredientType; }
-            set { _ingredientType = value; }
-        }
-        public string? Category
-        {
-            get { return _category; }
-            set { _category = value; }
-        }
+        public int Id { get; set; }
+        public string? Barcode { get; set; }
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+        public int? IngredientTypeId { get; set; }
+        public string? Category { get; set; }
         #endregion
 
         #region Constructors
         public Grocery()
         {
-            _id = 0;
-            _barcode = "";
-            _name = "";
-            _ingredientType = null;
-            _category = null;
+            Id = 0;
+            Barcode = "";
+            Name = "";
+            IngredientTypeId = null;
+            Category = null;
         }
-        public Grocery(int id, string? barcode, string name, string? ingredientType, string? category)
+        public Grocery(int id, string? barcode, string name, int? ingredientTypeId, string? category)
         {
-            _id = id;
-            _barcode = barcode;
-            _name = name;
-            _ingredientType = ingredientType;
-            _category = category;
+            Id = id;
+            Barcode = barcode;
+            Name = name;
+            IngredientTypeId = ingredientTypeId;
+            Category = category;
         }
         #endregion
 
