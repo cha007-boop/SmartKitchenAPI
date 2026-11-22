@@ -4,6 +4,7 @@ CREATE TABLE Grocery (
 	Id INT PRIMARY KEY IDENTITY(1,1),
 	Barcode NVARCHAR(20),
 	[Name] NVARCHAR(100) NOT NULL,
-	IngredientType NVARCHAR(50),
+	Quantity INT,
+	Ingredient NVARCHAR(50),
 	Category NVARCHAR(50)
 );

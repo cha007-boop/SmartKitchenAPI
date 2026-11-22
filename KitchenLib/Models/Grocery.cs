@@ -7,7 +7,7 @@
         public string? Barcode { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
-        public string? IngredientStr { get; set; }
+        public string? Ingredient { get; set; }
         public string? Category { get; set; }
         #endregion
 
@@ -17,15 +17,15 @@
             Id = 0;
             Barcode = "";
             Name = "";
-            IngredientStr = null;
+            Ingredient = null;
             Category = null;
         }
-        public Grocery(int id, string? barcode, string name, int? ingredientTypeId, string? category)
+        public Grocery(int id, string? barcode, string name, string? ingredient, string? category)
         {
             Id = id;
             Barcode = barcode;
             Name = name;
-            IngredientStr = ingredientTypeId;
+            Ingredient = ingredient;
             Category = category;
         }
         #endregion
