@@ -38,12 +38,7 @@ namespace KitchenLibTests.UnitTests
             int countBeforeScan = grocery.Quantity;
 
             // Act
-            ScanRequest request = new ScanRequest
-            {
-                Barcode = grocery.Barcode,
-                Mode = ScanMode.Add
-            };
-            await _groceryService.ProcessScanAsync(request);
+            await _groceryService.ProcessScanAsync(grocery.Barcode, ScanMode.Add);
 
             // Assert
             Grocery updatedGrocery = await _groceryService.GetByIdAsync(id);
