@@ -21,7 +21,7 @@ namespace KitchenLib.Repositories
             throw new NotImplementedException();
         }
 
-        public Grocery? Delete(int id)
+        public Task<Grocery?> Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -41,7 +41,7 @@ namespace KitchenLib.Repositories
             throw new NotImplementedException();
         }
 
-        public Grocery? Update(int id, Grocery grocery)
+        public Task<Grocery?> Update(int id, Grocery grocery)
         {
             throw new NotImplementedException();
         }
