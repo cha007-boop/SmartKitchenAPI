@@ -2,10 +2,10 @@
 using KitchenLib.Repositories;
 using Microsoft.Data.SqlClient;
 
-namespace KitchenLibTests
+namespace KitchenLibTests.IntegrationTests
 {
     [TestClass]
-    public sealed class GroceryRepositoryDBUnitTests
+    public sealed class GroceryRepositoryTests
     {
         private IGroceryRepository _groceryRepository;
         [TestInitialize]
