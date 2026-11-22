@@ -26,7 +26,7 @@ namespace KitchenLib.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Grocery>> GetAllAsync(int? id = null, string? barcode = null, string? name = null, string? ingredient = null, string? category = null, int? minQuantity = null, int? maxQuantity = null)
+        public Task<IEnumerable<Grocery>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
