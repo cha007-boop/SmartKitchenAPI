@@ -8,7 +8,6 @@ namespace KitchenLib.Repositories
 {
     public class GroceryRepositoryDB : IGroceryRepository
     {
-
         private string _connectionString;
 
         public GroceryRepositoryDB(string connectionString)
