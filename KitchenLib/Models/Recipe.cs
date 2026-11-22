@@ -6,62 +6,42 @@ namespace KitchenLib.Models
 {
     public class Recipe
     {
-        #region Instance fields
-        private int _id;
-        private string _name;
-        private string _description;
-        private string? _thumbnailUrl;
-        private List<Grocery> _ingredients;
-        private List<string> _measure;
-        private string? _instructions;
-        private string? _youtubeUrl;
-        private string? _tags;
-        #endregion
         #region Properties
-        public int Id
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public List<string> IngredientStrings { get; set; }
+        public List<string> Measure { get; set; }
+        public string? Instructions { get; set; }
+        public string? YoutubeUrl { get; set; }
+        public string? Tags { get; set; }
+        #endregion
+
+        #region Constructors
+        public Recipe()
         {
-            get { return _id; }
-            set { _id = value; }
+            Id = 0;
+            Name = "";
+            Description = "";
+            ThumbnailUrl = null;
+            IngredientStrings = new List<string>();
+            Measure = new List<string>();
+            Instructions = null;
+            YoutubeUrl = null;
+            Tags = null;
         }
-        public string Name
+        public Recipe(int id, string name, string description, string? thumbnailUrl, List<string> ingredientStrings, List<string> measure, string? instructions, string? youtubeUrl, string? tags)
         {
-            get { return _name; }
-            set { _name = value; }
-        }
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
-        public string? ThumbnailUrl
-        {
-            get { return _thumbnailUrl; }
-            set { _thumbnailUrl = value; }
-        }
-        public List<Grocery> Ingredients
-        {
-            get { return _ingredients; }
-            set { _ingredients = value; }
-        }
-        public List<string> Measure
-        {
-            get { return _measure; }
-            set { _measure = value; }
-        }
-        public string? Instructions
-        {
-            get { return _instructions; }
-            set { _instructions = value; }
-        }
-        public string? YoutubeUrl
-        {
-            get { return _youtubeUrl; }
-            set { _youtubeUrl = value; }
-        }
-        public string? Tags
-        {
-            get { return _tags; }
-            set { _tags = value; }
+            Id = id;
+            Name = name;
+            Description = description;
+            ThumbnailUrl = thumbnailUrl;
+            IngredientStrings = ingredientStrings;
+            Measure = measure;
+            Instructions = instructions;
+            YoutubeUrl = youtubeUrl;
+            Tags = tags;
         }
         #endregion
     }
