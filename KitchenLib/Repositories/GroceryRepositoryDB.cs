@@ -16,31 +16,32 @@ namespace KitchenLib.Repositories
             _connectionString = connectionString;
         }
 
-        public Grocery Add(Grocery grocery)
+        public Task<Grocery> AddAsync(Grocery grocery)
         {
             throw new NotImplementedException();
         }
 
-        public List<Grocery> GetAll(int? id = null, string? barcode = null, string? name = null, string? ingredientType = null, string? category = null, int? minQuantity = null, int? maxQuantity = null)
+        public Grocery? Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Grocery? GetByBarcode(string barcode)
+        public Task<IEnumerable<Grocery>> GetAllAsync(int? id = null, string? barcode = null, string? name = null, string? ingredient = null, string? category = null, int? minQuantity = null, int? maxQuantity = null)
         {
             throw new NotImplementedException();
         }
 
-        public Grocery? GetById(int id)
+        public Task<Grocery?> GetByBarcodeAsync(string barcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Grocery?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
         public Grocery? Update(int id, Grocery grocery)
-        {
-            throw new NotImplementedException();
-        }
-        public Grocery? Delete(int id)
         {
             throw new NotImplementedException();
         }
