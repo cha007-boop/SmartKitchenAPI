@@ -9,13 +9,16 @@ namespace KitchenLib.Models
         #region Properties
         public int Id { get; set; }
         public string Name { get; set; }
-        public string? Description { get; set; }
-        public string? ThumbnailUrl { get; set; }
+        public string? Category { get; set; }
+        public string? Area { get; set; }
+        public string? Country { get; set;}
         public List<string> IngredientStrings { get; set; }
         public List<string> Measures { get; set; }
         public string? Instructions { get; set; }
-        public string? YoutubeUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
         public string? Tags { get; set; }
+        public string? YoutubeUrl { get; set; }
+
         #endregion
 
         #region Constructors
@@ -23,7 +26,9 @@ namespace KitchenLib.Models
         {
             Id = 0;
             Name = "";
-            Description = "";
+            Category = "";
+            Area = "";
+            Country = "";
             ThumbnailUrl = null;
             IngredientStrings = new List<string>();
             Measures = new List<string>();
@@ -31,11 +36,13 @@ namespace KitchenLib.Models
             YoutubeUrl = null;
             Tags = null;
         }
-        public Recipe(int id, string name, string description, string? thumbnailUrl, List<string> ingredientStrings, List<string> measure, string? instructions, string? youtubeUrl, string? tags)
+        public Recipe(int id, string name, string? category, string? area, string? country, string? thumbnailUrl, List<string> ingredientStrings, List<string> measure, string? instructions, string? youtubeUrl, string? tags)
         {
             Id = id;
             Name = name;
-            Description = description;
+            Category = category;
+            Area = area;
+            Country = country;
             ThumbnailUrl = thumbnailUrl;
             IngredientStrings = ingredientStrings;
             Measures = measure;
