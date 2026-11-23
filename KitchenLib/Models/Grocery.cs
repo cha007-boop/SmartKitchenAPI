@@ -17,14 +17,16 @@
             Id = 0;
             Barcode = "";
             Name = "";
+            Quantity = 0;
             Ingredient = null;
             Category = null;
         }
-        public Grocery(int id, string? barcode, string name, string? ingredient, string? category)
+        public Grocery(int id, string? barcode, string name, int quantity, string? ingredient, string? category)
         {
             Id = id;
             Barcode = barcode;
             Name = name;
+            Quantity = quantity;
             Ingredient = ingredient;
             Category = category;
         }
