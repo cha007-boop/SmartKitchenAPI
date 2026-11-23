@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS Grocery;
 DROP TABLE IF EXISTS Ingredient;
+DROP TABLE IF EXISTS Recipe;
 
 CREATE TABLE Grocery (
 	Id INT PRIMARY KEY IDENTITY(1,1),
@@ -68,5 +69,9 @@ CREATE TABLE Recipe (
 	strMeasure17 NVARCHAR(20),
 	strMeasure18 NVARCHAR(20),
 	strMeasure19 NVARCHAR(20),
-	strMeasure20 NVARCHAR(20)
+	strMeasure20 NVARCHAR(20),
+	strSource NVARCHAR(100),
+	strImageSource NVARCHAR(50),
+	strCreativeCommonConfirmed NVARCHAR(20),
+	dateModified NVARCHAR(20),
 );
