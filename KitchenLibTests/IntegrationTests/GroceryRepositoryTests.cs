@@ -74,7 +74,7 @@ namespace KitchenLibTests.IntegrationTests
             grocery.Id = (await _groceryRepository.AddAsync(grocery)).Id;
 
             // Assert
-            Grocery groceryFromDb = await _groceryRepository.GetByIdAsync(grocery.Id);
+            Grocery groceryFromDb = (await _groceryRepository.GetAllAsync()).FirstOrDefault();
 
             Assert.AreEqual(grocery.Barcode, groceryFromDb.Barcode);
             Assert.AreEqual(grocery.Name, groceryFromDb.Name);

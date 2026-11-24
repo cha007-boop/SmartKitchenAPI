@@ -3,6 +3,7 @@ using KitchenLib.Models;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace KitchenLib.Repositories
@@ -21,7 +22,7 @@ namespace KitchenLib.Repositories
         {
             ArgumentNullException.ThrowIfNull(grocery);
             if (grocery.Name == null) throw new ArgumentException("Name can't be null");
-            if (grocery.Quantity < 1) throw new ArgumentException("Quantity must be at least 1");
+            if (grocery.Quantity < 1) throw new ArgumentOutOfRangeException("Quantity must be at least 1");
 
             
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -49,9 +50,21 @@ namespace KitchenLib.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Grocery>> GetAllAsync()
+        public async Task<IEnumerable<Grocery>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            List<Grocery> groceries = new List<Grocery>();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(@"SELECT * FROM Grocery", connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    groceries.Add(GroceryReader(reader));
+                }
+
+            }
+            return groceries;
         }
 
         public Task<Grocery?> GetByBarcodeAsync(string barcode)
@@ -67,6 +80,20 @@ namespace KitchenLib.Repositories
         public Task<Grocery?> UpdateAsync(int id, Grocery grocery)
         {
             throw new NotImplementedException();
+        }
+
+        private Grocery GroceryReader(SqlDataReader reader)
+        {
+            Grocery grocery = new Grocery
+            {
+                Id = reader.GetInt32("Id"),
+                Name = reader.GetString("Name"),
+                Barcode = reader.IsDBNull("Barcode") ? null : reader.GetString("Barcode"),
+                Quantity = reader.GetInt32("Quantity"),
+                Ingredient = reader.IsDBNull("Ingredient") ? null : reader.GetString("Ingredient"),
+                Category = reader.IsDBNull("Category") ? null : reader.GetString("Category")
+            };
+            return grocery;
         }
     }
 }
