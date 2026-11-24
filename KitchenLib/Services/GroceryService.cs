@@ -26,6 +26,14 @@ namespace KitchenLib.Services
         {
             throw new NotImplementedException();
         }
+        public Task AddGroceryAsync(string barcode)
+        {
+            throw new NotImplementedException();
+        }
+        public Task UseGroceryAsync(string barcode)
+        {
+            throw new NotImplementedException();
+        }
         public Task<Grocery?> GetByIdAsync(int id)
         {
             return _groceryRepository.GetByIdAsync(id);
