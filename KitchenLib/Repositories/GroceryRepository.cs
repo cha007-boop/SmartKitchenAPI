@@ -1,5 +1,6 @@
 ﻿using KitchenLib.Interfaces;
 using KitchenLib.Models;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,9 +16,32 @@ namespace KitchenLib.Repositories
             _connectionString = connectionString;
         }
 
-        public Task<Grocery> AddAsync(Grocery grocery)
+        // Always call inside a try-catch
+        public async Task<Grocery> AddAsync(Grocery grocery)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(grocery);
+            if (grocery.Name == null) throw new ArgumentException("Name can't be null");
+            if (grocery.Quantity < 1) throw new ArgumentException("Quantity must be at least 1");
+
+            
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                SqlCommand command = new SqlCommand(@"INSERT INTO Grocery (Barcode, Name, Quantity, Ingredient, Category)
+                    VALUES (@Barcode, @Name, @Quantity, @Ingredient, @Category)
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)", connection);
+                command.Parameters.AddWithValue("@Barcode", (string.IsNullOrWhiteSpace(grocery.Barcode) ? DBNull.Value: grocery.Barcode));
+                command.Parameters.AddWithValue("@Name", grocery.Name);
+                command.Parameters.AddWithValue("@Quantity", grocery.Quantity);
+                command.Parameters.AddWithValue("@Ingredient", (string.IsNullOrWhiteSpace(grocery.Ingredient) ? DBNull.Value : grocery.Ingredient));
+                command.Parameters.AddWithValue("@Category", (string.IsNullOrWhiteSpace(grocery.Category) ? DBNull.Value : grocery.Category));
+
+                var result = await command.ExecuteScalarAsync();
+                grocery.Id = Convert.ToInt32(result);
+
+                return grocery;
+            }
         }
 
         public Task<Grocery?> DeleteAsync(int id)
