@@ -67,15 +67,41 @@ namespace KitchenLib.Repositories
             return groceries;
         }
 
-        public Task<Grocery?> GetByBarcodeAsync(string barcode)
+        public async Task<Grocery?> GetByBarcodeAsync(string barcode)
         {
-            throw new NotImplementedException();
+            Grocery? grocery = null;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(@"SELECT * FROM Grocery WHERE Barcode = @Barcode", connection);
+                command.Parameters.AddWithValue("@Barcode", barcode);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                
+                if (await reader.ReadAsync())
+                {
+                    grocery = GroceryReader(reader);
+                }
+                return grocery;
+            }
         }
 
-        public Task<Grocery?> GetByIdAsync(int id)
+        public async Task<Grocery?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            Grocery? grocery = null;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(@"SELECT * FROM Grocery WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Id", id);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    grocery = GroceryReader(reader);
+                }
+                return grocery;
+            }
         }
+
 
         public Task<Grocery?> UpdateAsync(int id, Grocery grocery)
         {
