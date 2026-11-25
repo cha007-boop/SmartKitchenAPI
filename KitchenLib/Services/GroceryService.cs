@@ -50,7 +50,7 @@ namespace KitchenLib.Services
             }
             else if (mode == ScanMode.Subtract)
             {
-                if (grocery != null && grocery.Quantity > 1)
+                if (grocery != null && grocery.Quantity > 0)
                 {
                     grocery.Quantity -= 1;
                     await _groceryRepository.UpdateAsync(grocery.Id, grocery);
