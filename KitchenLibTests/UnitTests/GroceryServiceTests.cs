@@ -54,12 +54,18 @@ namespace KitchenLibTests.UnitTests
         public async Task ProcessScan_DecreasesQuantity()
         {
             //Arrange
+            string barcode = "123456789";
             int id = 1;
+            Grocery? grocery = await _groceryService.GetByIdAsync(id);
+
+            int countBeforeScan = grocery!.Quantity;
 
             // Act
-            Grocery grocery = await _groceryService.GetByIdAsync(id);
-            int countBeforeScan = grocery.Quantity;
+            await _groceryService.ProcessScanAsync(barcode, ScanMode.Subtract);
 
+            //Assert
+            Grocery? updatedGrocery = await _groceryService.GetByIdAsync(id);
+            Assert.AreEqual(countBeforeScan - 1, updatedGrocery!.Quantity);
         } 
 
         [TestMethod]
