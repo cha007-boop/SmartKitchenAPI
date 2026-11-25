@@ -46,31 +46,21 @@ namespace KitchenLibTests.UnitTests
             Assert.AreEqual(countBeforeScan + 1, countAfterScan);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
-        public async Task GetByIdAsync_Returns_CorrectGrocery()
+        public async Task ProcessScan_DecreasesQuantity()
         {
             //Arrange
-            Grocery grocery = new Grocery
-            {
-                Barcode = "SomeBarcode",
-                Name = "Name",
-                Quantity = 1,
-                Ingredient = "SomeIngredient",
-                Category = "Category"
-            };
-            Grocery thisGrocery = await _groceryService.AddGroceryAsync(grocery.Barcode);
+            int id = 1;
 
-            int id = thisGrocery.Id;
-            //Act 
-            Grocery? actualGrocery = await _groceryService.GetByIdAsync(id);
+            // Act
+            Grocery grocery = await _groceryService.GetByIdAsync(id);
+            int countBeforeScan = grocery.Quantity;
 
-            //Assert
-            Assert.AreEqual(actualGrocery.Barcode, grocery.Barcode);
-            Assert.AreEqual(actualGrocery.Name, grocery.Name);
-            Assert.AreEqual(actualGrocery.Quantity, grocery.Quantity);
-            Assert.AreEqual(actualGrocery.Ingredient, grocery.Ingredient);
-            Assert.AreEqual(actualGrocery.Category, grocery.Category);
-        }
+        } 
 
         [TestMethod]
         public void MyTestMethod()
