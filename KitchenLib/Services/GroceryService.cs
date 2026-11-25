@@ -34,7 +34,7 @@ namespace KitchenLib.Services
                 }
                 else
                 {
-                    ProductInfo? productInfo = await _productInfoProvider.GetByBarcodeAsync(barcode);
+                    ProductInfo productInfo = await _productInfoProvider.GetByBarcodeAsync(barcode) ?? throw new NullReferenceException();
                     IEnumerable<Ingredient> possibleIngredients = await _ingredientClassifier.ClassifyAsync(productInfo);
 
                     grocery = new Grocery
@@ -56,6 +56,7 @@ namespace KitchenLib.Services
                     grocery.Quantity -= 1;
                     await _groceryRepository.UpdateAsync(grocery.Id, grocery);
                 }
+                else { throw new NullReferenceException(); }
             }
             return grocery;
         }

@@ -80,14 +80,27 @@ namespace KitchenLibTests.UnitTests
             // Assert
             Grocery? addedGrocery = await _groceryService.GetByIdAsync(groceryId);
             Assert.AreEqual(1, addedGrocery.Quantity);
+        }
 
+        [TestMethod]
+        public async Task ProcessScanSubtractMode_NewProduct_ThrowsNullReferenceException()
+        {
+            // Arrange
+            string nonexistentBarcode = "0000";
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _groceryService.ProcessScanAsync(nonexistentBarcode, ScanMode.Subtract));
 
         }
 
         [TestMethod]
-        public void MyTestMethod()
+        public async Task ProcessScan_BadBarcode_ThrowsNullReferenceException()
         {
+            // Arrange
+            string nonexistentBarcode = "0000";
 
+            // Act & Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _groceryService.ProcessScanAsync(nonexistentBarcode, ScanMode.Add));
         }
     }
 }
