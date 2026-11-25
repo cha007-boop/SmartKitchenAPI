@@ -46,10 +46,6 @@ namespace KitchenLibTests.UnitTests
             Assert.AreEqual(countBeforeScan + 1, countAfterScan);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [TestMethod]
         public async Task ProcessScan_DecreasesQuantity()
         {
