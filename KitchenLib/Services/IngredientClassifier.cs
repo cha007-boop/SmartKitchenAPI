@@ -11,8 +11,7 @@ namespace KitchenLib.Services
 {
     public class IngredientClassifier : IIngredientClassifier
     {
-        private readonly IIngredientRepository _ingredientRepository;
-        public IngredientClassifier(IIngredientRepository ingredientRepository)
+        public Task<Ingredient?> ClassifyAsync(ProductInfo productInfo)
         {
             _ingredientRepository = ingredientRepository;
         }
