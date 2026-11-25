@@ -45,9 +45,20 @@ namespace KitchenLib.Repositories
             }
         }
 
-        public Task<Grocery?> DeleteAsync(int id)
+        public async Task<Grocery?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            Grocery? groceryToDelete = await GetByIdAsync(id);
+            if (groceryToDelete == null) return null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(@"DELETE FROM Grocery WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Id", id);
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return groceryToDelete;
         }
 
         public async Task<IEnumerable<Grocery>> GetAllAsync()
@@ -103,9 +114,25 @@ namespace KitchenLib.Repositories
         }
 
 
-        public Task<Grocery?> UpdateAsync(int id, Grocery grocery)
+        public async Task<Grocery?> UpdateAsync(int id, Grocery grocery)
         {
-            throw new NotImplementedException();
+            Grocery? groceryToUpdate = await GetByIdAsync(id);
+            if (groceryToUpdate == null) return null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(@"UPDATE Grocery SET Name = @Name, Barcode = @Barcode, Quantity = @Quantity, Ingredient = @Ingredient, Category = @Category WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Name", grocery.Name);
+                command.Parameters.AddWithValue("@Barcode", grocery.Barcode);
+                command.Parameters.AddWithValue("@Quantity", grocery.Quantity);
+                command.Parameters.AddWithValue("@Ingredient", grocery.Ingredient);
+                command.Parameters.AddWithValue("@Category", grocery.Category);
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return grocery;
         }
 
         private Grocery GroceryReader(SqlDataReader reader)
