@@ -26,11 +26,11 @@ namespace KitchenLib.Services
         {
             throw new NotImplementedException();
         }
-        public Task AddGroceryAsync(string barcode)
+        public Task<Grocery> AddGroceryAsync(string barcode)
         {
             throw new NotImplementedException();
         }
-        public Task UseGroceryAsync(string barcode)
+        public Task<Grocery> UseGroceryAsync(string barcode)
         {
             throw new NotImplementedException();
         }
