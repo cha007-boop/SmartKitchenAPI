@@ -240,8 +240,78 @@ namespace KitchenLibTests.IntegrationTests
             Assert.IsNull(foundGrocery);
         }
 
+        [TestMethod]
+        public async Task UpdateAsync_SuccessfullyUpdatesGroceryInDatabase()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+            await _groceryRepository.AddAsync(grocery);
 
+            Grocery updatedGrocery = new Grocery
+            {
+                Id = grocery.Id,
+                Name = "Updated Milk",
+                Barcode = "123444211",
+                Quantity = 2,
+                Ingredient = "Updated Milk",
+                Category = "Updated Dairy"
+            };
+            // Act
+            await _groceryRepository.UpdateAsync(grocery.Id, updatedGrocery);
 
+            // Assert
+            Grocery? groceryFromDb = await _groceryRepository.GetByIdAsync(grocery.Id);
+
+            Assert.IsNotNull(groceryFromDb);
+            Assert.AreEqual(updatedGrocery.Barcode, groceryFromDb.Barcode);
+            Assert.AreEqual(updatedGrocery.Name, groceryFromDb.Name);
+            Assert.AreEqual(updatedGrocery.Quantity, groceryFromDb.Quantity);
+            Assert.AreEqual(updatedGrocery.Ingredient, groceryFromDb.Ingredient);
+            Assert.AreEqual(updatedGrocery.Category, groceryFromDb.Category);
+        }
+        [TestMethod]
+        public async Task DeleteAsync_SuccessfullyDeletesGroceryFromDatabase()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+            await _groceryRepository.AddAsync(grocery);
+
+            // Act
+            await _groceryRepository.DeleteAsync(grocery.Id);
+
+            // Assert
+            Grocery? deletedGrocery = await _groceryRepository.GetByIdAsync(grocery.Id);
+            Assert.IsNull(deletedGrocery);
+        }
+
+        [TestMethod]
+        public async Task DeleteAsync_NonExistentId_ReturnsNull()
+        {
+            // Arrange 
+            int idToDelete = 0;
+
+            // Act
+            Grocery? deletedGrocery = await _groceryRepository.DeleteAsync(idToDelete);
+
+            // Assert
+            Assert.IsNull(deletedGrocery);
+        }
 
     }
 }
