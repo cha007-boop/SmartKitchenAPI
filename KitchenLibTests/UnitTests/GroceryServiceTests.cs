@@ -45,5 +45,58 @@ namespace KitchenLibTests.UnitTests
             int countAfterScan = updatedGrocery.Quantity;
             Assert.AreEqual(countBeforeScan + 1, countAfterScan);
         }
+
+        [TestMethod]
+        public async Task ProcessScan_DecreasesQuantity()
+        {
+            //Arrange
+            string barcode = "123456789";
+            int id = 1;
+            Grocery? grocery = await _groceryService.GetByIdAsync(id);
+
+            int countBeforeScan = grocery!.Quantity;
+
+            // Act
+            await _groceryService.ProcessScanAsync(barcode, ScanMode.Subtract);
+
+            //Assert
+            Grocery? updatedGrocery = await _groceryService.GetByIdAsync(id);
+            Assert.AreEqual(countBeforeScan - 1, updatedGrocery!.Quantity);
+        }
+
+        [TestMethod]
+        public async Task ProcessScanAddMode_NewProduct_AddsNewProductWithQuantity1()
+        {
+            // Arrange
+            string newBarcode = "987654321";
+
+            // Act
+            int groceryId = (await _groceryService.ProcessScanAsync(newBarcode, ScanMode.Add)).Id;
+
+            // Assert
+            Grocery? addedGrocery = await _groceryService.GetByIdAsync(groceryId);
+            Assert.AreEqual(1, addedGrocery.Quantity);
+        }
+
+        [TestMethod]
+        public async Task ProcessScanSubtractMode_NewProduct_ThrowsNullReferenceException()
+        {
+            // Arrange
+            string nonexistentBarcode = "0000";
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _groceryService.ProcessScanAsync(nonexistentBarcode, ScanMode.Subtract));
+
+        }
+
+        [TestMethod]
+        public async Task ProcessScan_BadBarcode_ThrowsNullReferenceException()
+        {
+            // Arrange
+            string nonexistentBarcode = "0000";
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _groceryService.ProcessScanAsync(nonexistentBarcode, ScanMode.Add));
+        }
     }
 }

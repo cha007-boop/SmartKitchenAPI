@@ -20,7 +20,7 @@ namespace KitchenLibTests.Fakes
             new Ingredient{ Id = 8, Name = "Pasta"}
         };
 
-        public Task<IEnumerable<Ingredient>> ClassifyAsync(ProductInfo productInfo)
+        public Task<Ingredient?> ClassifyAsync(ProductInfo productInfo)
         {
             List<string> productCategories = productInfo.Categories.Split(",").ToList();
             List<Ingredient> possibleMatches = new List<Ingredient>();
@@ -29,15 +29,20 @@ namespace KitchenLibTests.Fakes
             {
                 foreach (var category in productCategories)
                 {
-                    if (ingredient.Type != null && ingredient.Type.Contains(category, StringComparison.OrdinalIgnoreCase))
+                    if (ingredient.Type != null && category.Contains(ingredient.Type, StringComparison.OrdinalIgnoreCase))
                     {
                         possibleMatches.Add(ingredient);
                         break; // No need to check other categories for this ingredient
                     }
+                    else if (category.Contains(ingredient.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        possibleMatches.Add(ingredient);
+                        break;
+                    }
                 }
             }
 
-            return Task.FromResult<IEnumerable<Ingredient>>(possibleMatches);
+            return Task.FromResult<Ingredient>(possibleMatches.FirstOrDefault());
         }
     }
 }
