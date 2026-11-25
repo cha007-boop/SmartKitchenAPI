@@ -35,14 +35,14 @@ namespace KitchenLib.Services
                 else
                 {
                     ProductInfo productInfo = await _productInfoProvider.GetByBarcodeAsync(barcode) ?? throw new NullReferenceException();
-                    IEnumerable<Ingredient> possibleIngredients = await _ingredientClassifier.ClassifyAsync(productInfo);
+                    Ingredient ingredient = await _ingredientClassifier.ClassifyAsync(productInfo);
 
                     grocery = new Grocery
                     {
                         Barcode = barcode,
                         Name = productInfo.Name,
                         Quantity = 1,
-                        Ingredient = possibleIngredients.FirstOrDefault()?.Name,
+                        Ingredient = ingredient?.Name,
                         Category = productInfo.Categories
                     };
 

@@ -8,7 +8,7 @@ namespace KitchenLib.Services
 {
     public class IngredientClassifier : IIngredientClassifier
     {
-        public Task<IEnumerable<Ingredient>> ClassifyAsync(ProductInfo productInfo)
+        public Task<Ingredient> ClassifyAsync(ProductInfo productInfo)
         {
             throw new NotImplementedException();
         }
