@@ -20,7 +20,7 @@ namespace KitchenLibTests.Fakes
             new Ingredient{ Id = 8, Name = "Pasta"}
         };
 
-        public Task<IEnumerable<Ingredient>> ClassifyAsync(ProductInfo productInfo)
+        public Task<Ingredient?> ClassifyAsync(ProductInfo productInfo)
         {
             List<string> productCategories = productInfo.Categories.Split(",").ToList();
             List<Ingredient> possibleMatches = new List<Ingredient>();
@@ -37,7 +37,7 @@ namespace KitchenLibTests.Fakes
                 }
             }
 
-            return Task.FromResult<IEnumerable<Ingredient>>(possibleMatches);
+            return Task.FromResult<Ingredient>(possibleMatches.FirstOrDefault());
         }
     }
 }
