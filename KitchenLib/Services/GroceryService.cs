@@ -22,17 +22,41 @@ namespace KitchenLib.Services
             _ingredientClassifier = ingredientClassifier;
         }
 
-        public Task ProcessScanAsync(string barcode, ScanMode mode)
+        public async Task<Grocery?> ProcessScanAsync(string barcode, ScanMode mode)
         {
-            throw new NotImplementedException();
-        }
-        public Task<Grocery> AddGroceryAsync(string barcode)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<Grocery> UseGroceryAsync(string barcode)
-        {
-            throw new NotImplementedException();
+            Grocery? grocery = await _groceryRepository.GetByBarcodeAsync(barcode);
+            if (mode == ScanMode.Add)
+            {
+                if (grocery != null)
+                {
+                    grocery.Quantity += 1;
+                    await _groceryRepository.UpdateAsync(grocery.Id, grocery);
+                }
+                else
+                {
+                    ProductInfo? productInfo = await _productInfoProvider.GetByBarcodeAsync(barcode);
+                    IEnumerable<Ingredient> possibleIngredients = await _ingredientClassifier.ClassifyAsync(productInfo);
+                    grocery = new Grocery
+                    {
+                        Barcode = barcode,
+                        Name = productInfo.Name,
+                        Quantity = 1,
+                        Ingredient = possibleIngredients.FirstOrDefault().Name,
+                        Category = productInfo.Categories
+                    };
+
+                    await _groceryRepository.AddAsync(grocery);
+                }
+            }
+            else if (mode == ScanMode.Subtract)
+            {
+                if (grocery != null && grocery.Quantity > 1)
+                {
+                    grocery.Quantity -= 1;
+                    await _groceryRepository.UpdateAsync(grocery.Id, grocery);
+                }
+            }
+            return grocery;
         }
         public Task<Grocery?> GetByIdAsync(int id)
         {
