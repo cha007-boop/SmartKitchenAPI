@@ -17,7 +17,14 @@ namespace KitchenLib.Services
 
         public Task<ProductInfo?> GetByBarcodeAsync(string barcode)
         {
-            throw new NotImplementedException();
+            var productinfo = new ProductInfo
+            {
+                Barcode = barcode,
+                Name = "Test Product",
+                Brand = "Test Brand",
+                Categories = "Milk, Dairy"
+            };
+            return Task.FromResult<ProductInfo?>(productinfo);
         }
     }
 }

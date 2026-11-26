@@ -1,9 +1,11 @@
 ﻿using KitchenLib.Interfaces;
+using KitchenLib.Models;
 using KitchenLib.Repositories;
 using Microsoft.Data.SqlClient;
 
 namespace KitchenLibTests.IntegrationTests
 {
+    [DoNotParallelize]
     [TestClass]
     public sealed class GroceryRepositoryTests
     {
@@ -11,7 +13,7 @@ namespace KitchenLibTests.IntegrationTests
         [TestInitialize]
         public void TestInitialize()
         {
-            string connectionString = "testDbConnectionString";
+            string connectionString = "Server=tcp:smartkitchenserver.database.windows.net,1433;Initial Catalog=test-db;Persist Security Info=False;User ID=smartkitchen;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             _groceryRepository = new GroceryRepository(connectionString);
 
@@ -24,8 +26,292 @@ namespace KitchenLibTests.IntegrationTests
             command.ExecuteNonQuery();
         }
         [TestMethod]
-        public void TestMethod1()
+        public async Task Add_ValidGrocery_SuccessfullyAddsGroceryToDatabaseAsync()
         {
+            // Arrange 
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Arla Milk 1l",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+
+            int countBefore = (await _groceryRepository.GetAllAsync()).Count();
+
+            // Act
+            grocery.Id = (await _groceryRepository.AddAsync(grocery)).Id;
+
+            // Assert
+            Grocery groceryFromDb = (await _groceryRepository.GetAllAsync()).FirstOrDefault();
+
+            Assert.AreEqual(grocery.Barcode, groceryFromDb.Barcode);
+            Assert.AreEqual(grocery.Name, groceryFromDb.Name);
+            Assert.AreEqual(grocery.Quantity, groceryFromDb.Quantity);
+            Assert.AreEqual(grocery.Ingredient, groceryFromDb.Ingredient);
+            Assert.AreEqual(grocery.Category, groceryFromDb.Category);
         }
+
+        [TestMethod]
+        public async Task Add_ValidGroceryWithIngredientOrCategoryNull_SuccessfullyAddsGroceryToDatabaseAsync()
+        {
+            // Arrange 
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Arla Milk 1l",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = null,
+                Category = null
+            };
+
+            int countBefore = (await _groceryRepository.GetAllAsync()).Count();
+
+            // Act
+            grocery.Id = (await _groceryRepository.AddAsync(grocery)).Id;
+
+            // Assert
+            Grocery groceryFromDb = (await _groceryRepository.GetAllAsync()).FirstOrDefault();
+
+            Assert.AreEqual(grocery.Barcode, groceryFromDb.Barcode);
+            Assert.AreEqual(grocery.Name, groceryFromDb.Name);
+            Assert.AreEqual(grocery.Quantity, groceryFromDb.Quantity);
+            Assert.IsNull(groceryFromDb.Ingredient);
+            Assert.IsNull(groceryFromDb.Category);
+        }
+
+        [TestMethod]
+        public async Task Add_NameNull_ThrowsArgumentException()
+        {
+            // Arrange 
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = null,
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _groceryRepository.AddAsync(grocery));
+
+            
+        }
+
+        [TestMethod]
+        public async Task Add_GroceryNull_ThrowsArgumentNullException()
+        {
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _groceryRepository.AddAsync(null));
+        }
+
+        [TestMethod]
+        public async Task Add_QuantityLessThan1_ThrowsException()
+        {
+            // Arrange 
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = -1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await _groceryRepository.AddAsync(grocery));
+        }
+
+        [TestMethod]
+        public async Task GetAllAsync_ReturnsEmptyCollectionWhenNoGroceryInDatabase()
+        {
+            // Arrange
+            int expectedCount = 0;
+
+            // Act
+            var groceries = await _groceryRepository.GetAllAsync();
+
+            // Assert
+            Assert.HasCount(expectedCount, groceries);
+        }
+
+        [TestMethod]
+        public async Task GetAllAsync_ReturnsAddedGroceries()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+            int countBefore = (await _groceryRepository.GetAllAsync()).ToList().Count;
+
+            await _groceryRepository.AddAsync(grocery);
+            
+            // Act
+            var groceries = await _groceryRepository.GetAllAsync();
+
+            // Assert
+            Assert.HasCount(countBefore + 1, groceries);
+        }
+        [TestMethod]
+        public async Task GetByIdAsync_ExistingId_GetsSuccessfully()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+
+            grocery.Id = (await _groceryRepository.AddAsync(grocery)).Id;
+
+            // Act
+            Grocery? foundGrocery = await _groceryRepository.GetByIdAsync(grocery.Id);
+
+            // Assert
+            Assert.IsNotNull(foundGrocery);
+            Assert.AreEqual(grocery.Barcode, foundGrocery.Barcode);
+            Assert.AreEqual(grocery.Name, foundGrocery.Name);
+            Assert.AreEqual(grocery.Quantity, foundGrocery.Quantity);
+            Assert.AreEqual(grocery.Ingredient, foundGrocery.Ingredient);
+            Assert.AreEqual(grocery.Category, foundGrocery.Category);
+
+        }
+
+        [TestMethod]
+        public async Task GetByIdAsync_NonExistentId_ReturnsNull()
+        {
+            // Act
+            Grocery? foundGrocery = await _groceryRepository.GetByIdAsync(0);
+
+            // Assert
+            Assert.IsNull(foundGrocery);
+        }
+        [TestMethod]
+        public async Task GetByBarcode_ExistingBarcode_GetsSuccessfully()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+
+            _groceryRepository.AddAsync(grocery);
+
+            // Act
+            Grocery? foundGrocery = await _groceryRepository.GetByBarcodeAsync(grocery.Barcode);
+
+            // Assert
+            Assert.IsNotNull(foundGrocery);
+            Assert.AreEqual(grocery.Barcode, foundGrocery.Barcode);
+            Assert.AreEqual(grocery.Name, foundGrocery.Name);
+            Assert.AreEqual(grocery.Quantity, foundGrocery.Quantity);
+            Assert.AreEqual(grocery.Ingredient, foundGrocery.Ingredient);
+            Assert.AreEqual(grocery.Category, foundGrocery.Category);
+
+        }
+        [TestMethod]
+        public async Task GetByBarcodeAsync_NonExistentBarcode_ReturnsNull()
+        {
+            // Act
+            Grocery? foundGrocery = await _groceryRepository.GetByBarcodeAsync("0");
+
+            // Assert
+            Assert.IsNull(foundGrocery);
+        }
+
+        [TestMethod]
+        public async Task UpdateAsync_SuccessfullyUpdatesGroceryInDatabase()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+            await _groceryRepository.AddAsync(grocery);
+
+            Grocery updatedGrocery = new Grocery
+            {
+                Id = grocery.Id,
+                Name = "Updated Milk",
+                Barcode = "123444211",
+                Quantity = 2,
+                Ingredient = "Updated Milk",
+                Category = "Updated Dairy"
+            };
+            // Act
+            await _groceryRepository.UpdateAsync(grocery.Id, updatedGrocery);
+
+            // Assert
+            Grocery? groceryFromDb = await _groceryRepository.GetByIdAsync(grocery.Id);
+
+            Assert.IsNotNull(groceryFromDb);
+            Assert.AreEqual(updatedGrocery.Barcode, groceryFromDb.Barcode);
+            Assert.AreEqual(updatedGrocery.Name, groceryFromDb.Name);
+            Assert.AreEqual(updatedGrocery.Quantity, groceryFromDb.Quantity);
+            Assert.AreEqual(updatedGrocery.Ingredient, groceryFromDb.Ingredient);
+            Assert.AreEqual(updatedGrocery.Category, groceryFromDb.Category);
+        }
+        [TestMethod]
+        public async Task DeleteAsync_SuccessfullyDeletesGroceryFromDatabase()
+        {
+            // Arrange
+            Grocery grocery = new Grocery
+            {
+                Id = 1,
+                Name = "Milk",
+                Barcode = "123444211",
+                Quantity = 1,
+                Ingredient = "Milk",
+                Category = "Dairy"
+            };
+            await _groceryRepository.AddAsync(grocery);
+
+            // Act
+            await _groceryRepository.DeleteAsync(grocery.Id);
+
+            // Assert
+            Grocery? deletedGrocery = await _groceryRepository.GetByIdAsync(grocery.Id);
+            Assert.IsNull(deletedGrocery);
+        }
+
+        [TestMethod]
+        public async Task DeleteAsync_NonExistentId_ReturnsNull()
+        {
+            // Arrange 
+            int idToDelete = 0;
+
+            // Act
+            Grocery? deletedGrocery = await _groceryRepository.DeleteAsync(idToDelete);
+
+            // Assert
+            Assert.IsNull(deletedGrocery);
+        }
+
     }
 }

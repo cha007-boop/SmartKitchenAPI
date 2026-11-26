@@ -22,17 +22,43 @@ namespace KitchenLib.Services
             _ingredientClassifier = ingredientClassifier;
         }
 
-        public Task ProcessScanAsync(string barcode, ScanMode mode)
+        public async Task<Grocery?> ProcessScanAsync(string barcode, ScanMode mode)
         {
-            throw new NotImplementedException();
-        }
-        public Task AddGroceryAsync(string barcode)
-        {
-            throw new NotImplementedException();
-        }
-        public Task UseGroceryAsync(string barcode)
-        {
-            throw new NotImplementedException();
+            Grocery? grocery = await _groceryRepository.GetByBarcodeAsync(barcode);
+            if (mode == ScanMode.Add)
+            {
+                if (grocery != null)
+                {
+                    grocery.Quantity += 1;
+                    await _groceryRepository.UpdateAsync(grocery.Id, grocery);
+                }
+                else
+                {
+                    ProductInfo productInfo = await _productInfoProvider.GetByBarcodeAsync(barcode) ?? throw new NullReferenceException();
+                    Ingredient ingredient = await _ingredientClassifier.ClassifyAsync(productInfo);
+
+                    grocery = new Grocery
+                    {
+                        Barcode = barcode,
+                        Name = productInfo.Name,
+                        Quantity = 1,
+                        Ingredient = ingredient?.Name,
+                        Category = productInfo.Categories
+                    };
+
+                    await _groceryRepository.AddAsync(grocery);
+                }
+            }
+            else if (mode == ScanMode.Subtract)
+            {
+                if (grocery != null && grocery.Quantity > 0)
+                {
+                    grocery.Quantity -= 1;
+                    await _groceryRepository.UpdateAsync(grocery.Id, grocery);
+                }
+                else { throw new NullReferenceException(); }
+            }
+            return grocery;
         }
         public Task<Grocery?> GetByIdAsync(int id)
         {
@@ -41,6 +67,10 @@ namespace KitchenLib.Services
         public Task<IEnumerable<Grocery>> GetAllAsync()
         {
             return _groceryRepository.GetAllAsync();
+        }
+        public Task<Grocery?> DeleteAsync(int id)
+        {
+            return _groceryRepository.DeleteAsync(id);
         }
     }
 }
