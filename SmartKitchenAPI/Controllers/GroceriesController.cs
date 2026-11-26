@@ -118,6 +118,18 @@ namespace SmartKitchenAPI.Controllers
             return Ok(grocery);
         }
 
+        // POST api/<GroceriesController/Manuel
+        [HttpPost("Manuel")]
+        public async Task<ActionResult<Grocery>> ManuelPost([FromBody] ManualGroceryRequestDTO request)
+        {
+            var grocery = await _groceryService.ManuelAddAsync(request.Name, request.Ingredient, request.Quantity);
+            if (grocery == null)
+            {
+                return NotFound();
+            }
+            return Ok(grocery);
+        }
+
         // PUT api/<GroceriesController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
