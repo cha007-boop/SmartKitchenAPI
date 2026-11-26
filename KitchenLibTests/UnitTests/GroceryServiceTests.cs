@@ -114,7 +114,7 @@ namespace KitchenLibTests.UnitTests
             var groceryService = new GroceryService(repository, productProvider, classifierMock.Object);
 
             // Act
-            Grocery? grocery = await groceryService.AddAsync("Whole Milk 1l", "Milk", 2);
+            Grocery? grocery = await groceryService.ManuelAddAsync("Whole Milk 1l", "Milk", 2);
 
             // Assert
             Assert.IsNotNull(grocery);
@@ -140,7 +140,7 @@ namespace KitchenLibTests.UnitTests
 
             // Act + Assert
             await Assert.ThrowsExactlyAsync<ArgumentException>(
-                () => groceryService.AddAsync("Unknown Item", "NotAnIngredient", 1));
+                () => groceryService.ManuelAddAsync("Unknown Item", "NotAnIngredient", 1));
         }
 
     }
