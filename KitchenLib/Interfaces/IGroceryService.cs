@@ -12,5 +12,6 @@ namespace KitchenLib.Interfaces
         Task<IEnumerable<Grocery>> GetAllAsync();
         Task<Grocery> ManuelAddAsync(string name, string ingredient, int quantity);
         Task<Grocery?> DeleteAsync(int id);
+        Task<Grocery?> AddQuantity(int id);
     }
 }
