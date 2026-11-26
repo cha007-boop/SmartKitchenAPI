@@ -68,13 +68,13 @@ namespace KitchenLib.Services
         {
             return _groceryRepository.GetAllAsync();
         }
-        public async Task<Grocery> AddAsync(string name, string ingredient, int quantity)
+        public async Task<Grocery> ManuelAddAsync(string name, string ingredient, int quantity)
         {
-            ProductInfo productInfo = new ProductInfo { Barcode = "", Brand = "", Categories = ingredient, Name = "" };
-           
-            Ingredient? ingredient1 = await _ingredientClassifier.ClassifyAsync(productInfo);
+            ProductInfo productInfo = new ProductInfo { Barcode = "", Brand = "", Categories = ingredient, Name = name };
 
-            return await _groceryRepository.AddAsync(new Grocery { Ingredient = ingredient1.Name, Name = name, Quantity = quantity });
+            Ingredient ingredientResult = await _ingredientClassifier.ClassifyAsync(productInfo) ?? throw new ArgumentException( $"Unknown ingredient: {ingredient}", nameof(ingredient));
+
+            return await _groceryRepository.AddAsync(new Grocery { Ingredient = ingredientResult.Name, Name = name, Quantity = quantity });
         }
     }
 }
