@@ -1,3 +1,6 @@
+using KitchenLib.Interfaces;
+using KitchenLib.Services;
+using KitchenLib.Repositories;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +26,22 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();
         });
 });
+
+builder.Services.AddScoped<IGroceryService, GroceryService>();
+builder.Services.AddScoped<IGroceryRepository>(serviceProvider =>
+{
+    IConfiguration configuration =
+        serviceProvider.GetRequiredService<IConfiguration>();
+
+    string connectionString =
+        configuration.GetConnectionString("SmartKitchen")
+        ?? throw new InvalidOperationException(
+            "Connection string 'SmartKitchen' was not found.");
+
+    return new GroceryRepository(connectionString);
+});
+builder.Services.AddScoped<IIngredientClassifier, IngredientClassifier>();
+builder.Services.AddScoped<IProductInfoProvider, OpenFoodFactsService>();
 
 
 var app = builder.Build();

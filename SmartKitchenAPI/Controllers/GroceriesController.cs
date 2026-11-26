@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KitchenLib.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +9,13 @@ namespace SmartKitchenAPI.Controllers
     [ApiController]
     public class GroceriesController : ControllerBase
     {
+        private readonly IGroceryService _groceryService;
+
+        public GroceriesController(IGroceryService groceryService)
+        {
+            _groceryService = groceryService;
+        }
+
         // GET: api/<GroceriesController>
         [HttpGet]
         public IEnumerable<string> Get()
