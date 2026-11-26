@@ -10,5 +10,6 @@ namespace KitchenLib.Interfaces
         Task<Grocery?> ProcessScanAsync(string barcode, ScanMode mode);
         Task<Grocery?> GetByIdAsync(int id);
         Task<IEnumerable<Grocery>> GetAllAsync();
+        Task DeleteAsync(int id);
     }
 }
