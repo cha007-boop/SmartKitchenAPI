@@ -7,7 +7,7 @@ namespace KitchenLib.Interfaces
 {
     public interface IRecipeRepository
     {
-        Task<Recipe> GetByIdAsync(int id);
+        Task<Recipe?> GetByIdAsync(int id);
         Task<IEnumerable<Recipe>> GetAllAsync();
     }
 }
