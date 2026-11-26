@@ -25,6 +25,7 @@ namespace SmartKitchenAPI.Controllers
         // GET: api/<GroceriesController>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<Grocery>> Get()
         {
             var groceries = _groceryService.GetAllAsync().Result.ToList();
@@ -35,8 +36,66 @@ namespace SmartKitchenAPI.Controllers
             return Ok(groceries);
         }
 
+        // Get api/<GroceriesController>/ingredients
+        [HttpGet("ingredients")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<IEnumerable<Ingredient>> GetIngredients()
+        {
+            var ingredients = _ingredientRepository.GetAllAsync().Result.ToList();
+            if (ingredients.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(ingredients);
+        }
+
+        // Get api/<GroceriesController>/ingredients/{id}
+        [HttpGet("ingredients/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Ingredient> GetIngredient(int id)
+        {
+            var ingredient = _ingredientRepository.GetByIdAsync(id).Result;
+            if (ingredient == null)
+            {
+                return NotFound();
+            }
+            return Ok(ingredient);
+        }
+
+        // Get api/<GroceriesController>/recipes
+        [HttpGet("recipes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<IEnumerable<Recipe>> GetRecipes()
+        {
+            var recipes = _recipeRepository.GetAllAsync().Result.ToList();
+            if (recipes.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(recipes);
+        }
+
+        // Get api/<GroceriesController>/recipes/{id}
+        [HttpGet("recipes/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Recipe> GetRecipe(int id)
+        {
+            var recipe = _recipeRepository.GetByIdAsync(id).Result;
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            return Ok(recipe);
+        }
+
         // GET api/<GroceriesController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Grocery> Get(int id)
         {
             var grocery = _groceryService.GetByIdAsync(id).Result;
