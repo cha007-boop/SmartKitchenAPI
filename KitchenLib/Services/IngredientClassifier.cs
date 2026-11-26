@@ -57,8 +57,10 @@ public sealed class IngredientClassifier : IIngredientClassifier
                 return matchingIngredient;
             }
         }
-
-        return null;
+        // If no matching ingredient is found, throw an exception with a descriptive message.
+        throw new ArgumentException(
+            $"No matching ingredient found for product '{productInfo.Name}' with categories '{productInfo.Categories}'.",
+            nameof(productInfo));
     }
 
     private static bool AreEquivalent(string first, string second)
