@@ -1,5 +1,6 @@
 ﻿using KitchenLib.Interfaces;
 using KitchenLib.Models;
+using KitchenLib.Services;
 using Microsoft.AspNetCore.Mvc;
 using SmartKitchenAPI.Models;
 
@@ -128,6 +129,7 @@ namespace SmartKitchenAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _groceryService.DeleteAsync(id);
         }
     }
 }
