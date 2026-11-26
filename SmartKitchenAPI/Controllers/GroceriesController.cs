@@ -127,9 +127,14 @@ namespace SmartKitchenAPI.Controllers
 
         // DELETE api/<GroceriesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Grocery> Delete(int id)
         {
-            _groceryService.DeleteAsync(id);
+            Grocery? grocery = _groceryService.DeleteAsync(id).Result;
+            if (grocery == null)
+            {
+                return NotFound();
+            }
+            return Ok(grocery);
         }
     }
 }
