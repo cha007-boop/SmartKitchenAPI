@@ -98,5 +98,50 @@ namespace KitchenLibTests.UnitTests
             // Act & Assert
             await Assert.ThrowsAsync<NullReferenceException>(async () => await _groceryService.ProcessScanAsync(nonexistentBarcode, ScanMode.Add));
         }
+
+        [TestMethod]
+        public async Task AddAsync_ValidIngredient_AddsGrocery()
+        {
+            // Arrange
+            var repository = new FakeGroceryRepository();
+            var productProvider = new FakeProductInfoProvider();
+            var classifierMock = new Mock<IIngredientClassifier>();
+
+            classifierMock
+                .Setup(c => c.ClassifyAsync(It.IsAny<ProductInfo>()))
+                .ReturnsAsync(new Ingredient { Id = 1, Name = "Milk" });
+
+            var groceryService = new GroceryService(repository, productProvider, classifierMock.Object);
+
+            // Act
+            Grocery? grocery = await groceryService.AddAsync("Whole Milk 1l", "Milk", 2);
+
+            // Assert
+            Assert.IsNotNull(grocery);
+            Assert.AreEqual("Whole Milk 1l", grocery.Name);
+            Assert.AreEqual(2, grocery.Quantity);
+            Assert.AreEqual("Milk", grocery.Ingredient);
+            Assert.IsTrue(grocery.Id > 0);
+        }
+
+        [TestMethod]
+        public async Task AddAsync_UnknownIngredient_ThrowsArgumentException()
+        {
+            // Arrange
+            var repository = new FakeGroceryRepository();
+            var productProvider = new FakeProductInfoProvider();
+            var classifierMock = new Mock<IIngredientClassifier>();
+
+            classifierMock
+                .Setup(c => c.ClassifyAsync(It.IsAny<ProductInfo>()))
+                .ReturnsAsync((Ingredient?)null);
+
+            var groceryService = new GroceryService(repository, productProvider, classifierMock.Object);
+
+            // Act + Assert
+            await Assert.ThrowsExactlyAsync<ArgumentException>(
+                () => groceryService.AddAsync("Unknown Item", "NotAnIngredient", 1));
+        }
+
     }
 }
