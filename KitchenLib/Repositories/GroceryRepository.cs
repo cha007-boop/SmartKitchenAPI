@@ -53,11 +53,21 @@ namespace KitchenLib.Repositories
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                SqlCommand command = new SqlCommand(@"DELETE FROM Grocery WHERE Id = @Id", connection);
-                command.Parameters.AddWithValue("@Id", id);
-                await command.ExecuteNonQueryAsync();
+
+                SqlCommand decrementCommand = new SqlCommand(
+                    @"UPDATE Grocery SET Quantity = Quantity - 1 WHERE Id = @Id AND Quantity > 1", connection);
+                decrementCommand.Parameters.AddWithValue("@Id", id);
+                int rowsUpdated = await decrementCommand.ExecuteNonQueryAsync();
+
+                if (rowsUpdated == 0)
+                {
+                    SqlCommand deleteCommand = new SqlCommand(@"DELETE FROM Grocery WHERE Id = @Id", connection);
+                    deleteCommand.Parameters.AddWithValue("@Id", id);
+                    await deleteCommand.ExecuteNonQueryAsync();
+                }
             }
 
+            groceryToDelete.Quantity -= 1;
             return groceryToDelete;
         }
 
