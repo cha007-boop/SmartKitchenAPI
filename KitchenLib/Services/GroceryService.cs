@@ -75,6 +75,9 @@ namespace KitchenLib.Services
             Ingredient ingredientResult = await _ingredientClassifier.ClassifyAsync(productInfo) ?? throw new ArgumentException( $"Unknown ingredient: {ingredient}", nameof(ingredient));
 
             return await _groceryRepository.AddAsync(new Grocery { Ingredient = ingredientResult.Name, Name = name, Quantity = quantity });
+        public Task<Grocery?> DeleteAsync(int id)
+        {
+            return _groceryRepository.DeleteAsync(id);
         }
     }
 }
