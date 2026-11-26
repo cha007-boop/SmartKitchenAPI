@@ -136,5 +136,17 @@ namespace SmartKitchenAPI.Controllers
             }
             return Ok(grocery);
         }
+
+        // PUT api/<GroceriesController>/5/add
+        [HttpPut("{id}/add")]
+        public ActionResult<Grocery> AddQuantity(int id)
+        {
+            Grocery? grocery = _groceryService.AddQuantity(id).Result;
+            if (grocery == null)
+            {
+                return NotFound();
+            }
+            return Ok(grocery);
+        }
     }
 }

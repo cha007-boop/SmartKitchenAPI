@@ -47,28 +47,25 @@ namespace KitchenLib.Repositories
 
         public async Task<Grocery?> DeleteAsync(int id)
         {
-            Grocery? groceryToDelete = await GetByIdAsync(id);
-            if (groceryToDelete == null) return null;
+            Grocery? grocery = await GetByIdAsync(id);
+            if (grocery == null) return null;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                SqlCommand decrementCommand = new SqlCommand(
-                    @"UPDATE Grocery SET Quantity = Quantity - 1 WHERE Id = @Id AND Quantity > 1", connection);
-                decrementCommand.Parameters.AddWithValue("@Id", id);
-                int rowsUpdated = await decrementCommand.ExecuteNonQueryAsync();
+                SqlCommand command = new SqlCommand(
+                    @"UPDATE Grocery SET Quantity = Quantity - 1 WHERE Id = @Id AND Quantity > 0", connection);
+                command.Parameters.AddWithValue("@Id", id);
+                int rowsUpdated = await command.ExecuteNonQueryAsync();
 
-                if (rowsUpdated == 0)
+                if (rowsUpdated > 0)
                 {
-                    SqlCommand deleteCommand = new SqlCommand(@"DELETE FROM Grocery WHERE Id = @Id", connection);
-                    deleteCommand.Parameters.AddWithValue("@Id", id);
-                    await deleteCommand.ExecuteNonQueryAsync();
+                    grocery.Quantity -= 1;
                 }
             }
 
-            groceryToDelete.Quantity -= 1;
-            return groceryToDelete;
+            return grocery;
         }
 
         public async Task<IEnumerable<Grocery>> GetAllAsync()
@@ -156,6 +153,29 @@ namespace KitchenLib.Repositories
                 Ingredient = reader.IsDBNull("Ingredient") ? null : reader.GetString("Ingredient"),
                 Category = reader.IsDBNull("Category") ? null : reader.GetString("Category")
             };
+            return grocery;
+        }
+
+        public async Task<Grocery?> AddQuantityAsync(int id)
+        {
+            Grocery? grocery = await GetByIdAsync(id);
+            if (grocery == null) return null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                SqlCommand command = new SqlCommand(
+                    @"UPDATE Grocery SET Quantity = Quantity + 1 WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Id", id);
+                int rowsUpdated = await command.ExecuteNonQueryAsync();
+
+                if (rowsUpdated > 0)
+                {
+                    grocery.Quantity += 1;
+                }
+            }
+
             return grocery;
         }
     }

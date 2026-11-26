@@ -72,5 +72,9 @@ namespace KitchenLib.Services
         {
             return _groceryRepository.DeleteAsync(id);
         }
+        public Task<Grocery?> AddQuantity(int id)
+        {
+            return _groceryRepository.AddQuantityAsync(id);
+        }
     }
 }
