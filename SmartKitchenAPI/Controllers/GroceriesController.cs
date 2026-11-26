@@ -1,5 +1,7 @@
 ﻿using KitchenLib.Interfaces;
+using KitchenLib.Models;
 using Microsoft.AspNetCore.Mvc;
+using SmartKitchenAPI.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,30 +12,51 @@ namespace SmartKitchenAPI.Controllers
     public class GroceriesController : ControllerBase
     {
         private readonly IGroceryService _groceryService;
+        private readonly IRecipeRepository _recipeRepository;
+        private readonly IIngredientRepository _ingredientRepository;
 
-        public GroceriesController(IGroceryService groceryService)
+        public GroceriesController(IGroceryService groceryService, IRecipeRepository recipeRepository, IIngredientRepository ingredientRepository)
         {
             _groceryService = groceryService;
+            _recipeRepository = recipeRepository;
+            _ingredientRepository = ingredientRepository;
         }
 
         // GET: api/<GroceriesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<Grocery>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var groceries = _groceryService.GetAllAsync().Result.ToList();
+            if (groceries.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(groceries);
         }
 
         // GET api/<GroceriesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Grocery> Get(int id)
         {
-            return "value";
+            var grocery = _groceryService.GetByIdAsync(id).Result;
+            if (grocery == null)
+            {
+                return NotFound();
+            }
+            return Ok(grocery);
         }
 
-        // POST api/<GroceriesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // POST api/<GroceriesController/scan>
+        [HttpPost("scan")]
+        public ActionResult<Grocery> Post([FromBody] ScanRequestDTO scanRequestDto)
         {
+            var grocery = _groceryService.ProcessScanAsync(scanRequestDto.Barcode, scanRequestDto.Mode).Result;
+            if (grocery == null)
+            {
+                return NotFound();
+            }
+            return Ok(grocery);
         }
 
         // PUT api/<GroceriesController>/5

@@ -1,13 +1,20 @@
 using KitchenLib.Interfaces;
-using KitchenLib.Services;
 using KitchenLib.Repositories;
+using KitchenLib.Services;
 using Microsoft.OpenApi;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(
+            namingPolicy: null,
+            allowIntegerValues: false));
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -41,8 +48,9 @@ builder.Services.AddScoped<IGroceryRepository>(serviceProvider =>
     return new GroceryRepository(connectionString);
 });
 builder.Services.AddScoped<IIngredientClassifier, IngredientClassifier>();
-builder.Services.AddScoped<IProductInfoProvider, OpenFoodFactsService>();
-
+builder.Services.AddHttpClient<IProductInfoProvider, OpenFoodFactsService>();
+builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 
 var app = builder.Build();
 
