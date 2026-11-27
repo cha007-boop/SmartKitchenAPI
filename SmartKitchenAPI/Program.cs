@@ -48,7 +48,19 @@ builder.Services.AddScoped<IGroceryRepository>(serviceProvider =>
     return new GroceryRepository(connectionString);
 });
 builder.Services.AddScoped<IIngredientClassifier, IngredientClassifier>();
-builder.Services.AddHttpClient<IProductInfoProvider, OpenFoodFactsService>();
+builder.Services.AddHttpClient<IProductInfoProvider, OpenFoodFactsService>(
+    (serviceProvider, httpClient) =>
+    {
+        IConfiguration configuration =
+            serviceProvider.GetRequiredService<IConfiguration>();
+
+        string baseAddress =
+            configuration["ProductInfoApi:BaseAddress"]
+            ?? throw new InvalidOperationException(
+                "Product info API base address was not configured.");
+
+        httpClient.BaseAddress = new Uri(baseAddress);
+    });
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 

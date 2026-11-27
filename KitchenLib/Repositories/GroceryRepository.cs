@@ -132,10 +132,10 @@ namespace KitchenLib.Repositories
                 SqlCommand command = new SqlCommand(@"UPDATE Grocery SET Name = @Name, Barcode = @Barcode, Quantity = @Quantity, Ingredient = @Ingredient, Category = @Category WHERE Id = @Id", connection);
                 command.Parameters.AddWithValue("@Id", id);
                 command.Parameters.AddWithValue("@Name", grocery.Name);
-                command.Parameters.AddWithValue("@Barcode", grocery.Barcode);
+                command.Parameters.AddWithValue("@Barcode", grocery.Barcode ?? "");
                 command.Parameters.AddWithValue("@Quantity", grocery.Quantity);
-                command.Parameters.AddWithValue("@Ingredient", grocery.Ingredient);
-                command.Parameters.AddWithValue("@Category", grocery.Category);
+                command.Parameters.AddWithValue("@Ingredient", grocery.Ingredient ?? "");
+                command.Parameters.AddWithValue("@Category", grocery.Category ?? "");
                 await command.ExecuteNonQueryAsync();
             }
 
