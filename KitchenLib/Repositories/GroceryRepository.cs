@@ -156,27 +156,27 @@ namespace KitchenLib.Repositories
             return grocery;
         }
 
-        public async Task<Grocery?> AddQuantityAsync(int id)
-        {
-            Grocery? grocery = await GetByIdAsync(id);
-            if (grocery == null) return null;
+        //public async Task<Grocery?> AddQuantityAsync(int id)
+        //{
+        //    Grocery? grocery = await GetByIdAsync(id);
+        //    if (grocery == null) return null;
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        await connection.OpenAsync();
 
-                SqlCommand command = new SqlCommand(
-                    @"UPDATE Grocery SET Quantity = Quantity + 1 WHERE Id = @Id", connection);
-                command.Parameters.AddWithValue("@Id", id);
-                int rowsUpdated = await command.ExecuteNonQueryAsync();
+        //        SqlCommand command = new SqlCommand(
+        //            @"UPDATE Grocery SET Quantity = Quantity + 1 WHERE Id = @Id", connection);
+        //        command.Parameters.AddWithValue("@Id", id);
+        //        int rowsUpdated = await command.ExecuteNonQueryAsync();
 
-                if (rowsUpdated > 0)
-                {
-                    grocery.Quantity += 1;
-                }
-            }
+        //        if (rowsUpdated > 0)
+        //        {
+        //            grocery.Quantity += 1;
+        //        }
+        //    }
 
-            return grocery;
-        }
+        //    return grocery;
+        //}
     }
 }

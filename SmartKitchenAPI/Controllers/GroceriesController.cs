@@ -15,12 +15,14 @@ namespace SmartKitchenAPI.Controllers
         private readonly IGroceryService _groceryService;
         private readonly IRecipeRepository _recipeRepository;
         private readonly IIngredientRepository _ingredientRepository;
+        private readonly IGroceryRepository _groceryRepository;
 
-        public GroceriesController(IGroceryService groceryService, IRecipeRepository recipeRepository, IIngredientRepository ingredientRepository)
+        public GroceriesController(IGroceryService groceryService, IRecipeRepository recipeRepository, IIngredientRepository ingredientRepository, IGroceryRepository groceryRepository)
         {
             _groceryService = groceryService;
             _recipeRepository = recipeRepository;
             _ingredientRepository = ingredientRepository;
+            _groceryRepository = groceryRepository;
         }
 
         // GET: api/<GroceriesController>
@@ -133,15 +135,39 @@ namespace SmartKitchenAPI.Controllers
 
         // PUT api/<GroceriesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async  Task<ActionResult<Grocery>> Put(int id, [FromBody] GroceryDTO groceryDTO)
         {
+            try
+            {
+                Grocery? grocery = await _groceryService.UpdateAsync(id, new Grocery
+                {
+                    Id = id,
+                    Name = groceryDTO.Name,
+                    Barcode = groceryDTO.Barcode,
+                    Quantity = groceryDTO.Quantity,
+                    Ingredient = groceryDTO.Ingredient
+                });
+                if (grocery == null)
+                {
+                    return NotFound();
+                }
+                return Ok(grocery);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<GroceriesController>/5
         [HttpDelete("{id}")]
         public ActionResult<Grocery> Delete(int id)
         {
-            Grocery? grocery = _groceryService.DeleteAsync(id).Result;
+            Grocery? grocery = _groceryRepository.DeleteAsync(id).Result;
             if (grocery == null)
             {
                 return NotFound();
@@ -149,16 +175,16 @@ namespace SmartKitchenAPI.Controllers
             return Ok(grocery);
         }
 
-        // PUT api/<GroceriesController>/5/add
-        [HttpPut("{id}/add")]
-        public ActionResult<Grocery> AddQuantity(int id)
-        {
-            Grocery? grocery = _groceryService.AddQuantity(id).Result;
-            if (grocery == null)
-            {
-                return NotFound();
-            }
-            return Ok(grocery);
-        }
+        //// PUT api/<GroceriesController>/5/add
+        //[HttpPut("{id}/add")]
+        //public ActionResult<Grocery> AddQuantity(int id)
+        //{
+        //    Grocery? grocery = _groceryService.AddQuantity(id).Result;
+        //    if (grocery == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Ok(grocery);
+        //}
     }
 }

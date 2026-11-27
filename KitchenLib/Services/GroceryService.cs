@@ -76,13 +76,23 @@ namespace KitchenLib.Services
 
             return await _groceryRepository.AddAsync(new Grocery { Ingredient = ingredientResult.Name, Name = name, Quantity = quantity });
         }
-        public Task<Grocery?> DeleteAsync(int id)
+
+        public async Task<Grocery?> UpdateAsync(int id, Grocery updatedGrocery)
         {
-            return _groceryRepository.DeleteAsync(id);
+            Grocery? existingGrocery = await _groceryRepository.GetByIdAsync(id);
+            if (existingGrocery == null)
+            {
+                return null;
+            }
+            string ingredient = _ingredientClassifier.ClassifyAsync(new ProductInfo { Name = updatedGrocery.Name, Categories = updatedGrocery.Ingredient }).Result?.Name ?? throw new ArgumentException($"Unknown ingredient: {updatedGrocery.Ingredient}", nameof(updatedGrocery.Ingredient));
+
+            existingGrocery.Name = updatedGrocery.Name;
+            existingGrocery.Barcode = updatedGrocery.Barcode ?? existingGrocery.Barcode;
+            existingGrocery.Quantity = updatedGrocery.Quantity;
+            existingGrocery.Ingredient = ingredient;
+            existingGrocery.Category = updatedGrocery.Category ?? existingGrocery.Category;
+            return await _groceryRepository.UpdateAsync(id, existingGrocery);
         }
-        public Task<Grocery?> AddQuantity(int id)
-        {
-            return _groceryRepository.AddQuantityAsync(id);
-        }
+       
     }
 }
