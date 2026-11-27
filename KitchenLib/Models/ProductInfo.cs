@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KitchenLib.Models
 {
-    public class ProductInfo
+    public sealed class ProductInfo
     {
         public string Barcode { get; set; }
         public string Name { get; set; }

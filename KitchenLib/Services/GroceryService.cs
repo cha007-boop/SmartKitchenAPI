@@ -35,7 +35,17 @@ namespace KitchenLib.Services
                 else
                 {
                     ProductInfo productInfo = await _productInfoProvider.GetByBarcodeAsync(barcode) ?? throw new NullReferenceException();
-                    Ingredient ingredient = await _ingredientClassifier.ClassifyAsync(productInfo);
+                    Ingredient? ingredient = null;
+                    try
+                    {
+                        ingredient = await _ingredientClassifier.ClassifyAsync(productInfo);
+                    }
+                    catch (ArgumentException)
+                    {
+                        ingredient = null;
+                    }
+
+
 
                     grocery = new Grocery
                     {
@@ -72,7 +82,15 @@ namespace KitchenLib.Services
         {
             ProductInfo productInfo = new ProductInfo { Barcode = "", Brand = "", Categories = ingredient, Name = name };
 
-            Ingredient ingredientResult = await _ingredientClassifier.ClassifyAsync(productInfo) ?? throw new ArgumentException($"Unknown ingredient: {ingredient}", nameof(ingredient));
+            Ingredient ingredientResult = new Ingredient();
+            try
+            {
+                ingredientResult = await _ingredientClassifier.ClassifyAsync(productInfo);
+            }
+            catch (ArgumentException)
+            {
+                ingredientResult = new Ingredient { Id = 0, Name = ingredient };
+            }
 
             return await _groceryRepository.AddAsync(new Grocery { Ingredient = ingredientResult.Name, Name = name, Quantity = quantity });
         }
@@ -84,7 +102,22 @@ namespace KitchenLib.Services
             {
                 return null;
             }
-            string ingredient = _ingredientClassifier.ClassifyAsync(new ProductInfo { Name = updatedGrocery.Name, Categories = updatedGrocery.Ingredient }).Result?.Name ?? throw new ArgumentException($"Unknown ingredient: {updatedGrocery.Ingredient}", nameof(updatedGrocery.Ingredient));
+            string? ingredient = "";
+            try
+            {
+                ProductInfo productInfo = new ProductInfo
+                {
+                    Name = updatedGrocery.Name,
+                    Categories = updatedGrocery.Ingredient
+                };
+                ingredient = (await _ingredientClassifier.ClassifyAsync(productInfo)).Name;
+            }
+            catch (ArgumentException)
+            {
+                ingredient = updatedGrocery.Ingredient;
+            }
+
+
 
             existingGrocery.Name = updatedGrocery.Name;
             existingGrocery.Barcode = updatedGrocery.Barcode ?? existingGrocery.Barcode;
@@ -93,6 +126,6 @@ namespace KitchenLib.Services
             existingGrocery.Category = updatedGrocery.Category ?? existingGrocery.Category;
             return await _groceryRepository.UpdateAsync(id, existingGrocery);
         }
-       
+
     }
 }

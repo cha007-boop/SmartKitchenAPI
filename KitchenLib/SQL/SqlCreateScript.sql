@@ -8,7 +8,7 @@ CREATE TABLE Grocery (
 	[Name] NVARCHAR(200) NOT NULL,
 	Quantity INT,
 	Ingredient NVARCHAR(60),
-	Category NVARCHAR(50)
+	Category NVARCHAR(1000) NULL
 );
 
 CREATE TABLE Ingredient (
